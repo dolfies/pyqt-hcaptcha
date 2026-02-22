@@ -5,9 +5,31 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyqt-hcaptcha"
 description = "Modern hCaptcha SDK for PyQt applications"
-readme = "README.md"
-version = "1.0.0"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { file = "LICENSE" }
+authors = [{ name = "Dolfies", email = "me@dolfi.es" }]
 requires-python = ">=3.9"
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: X11 Applications :: Qt",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+version = "1.0.1"
 dependencies = [
     "pyqt6",
     "pyqt6-webengine",
@@ -65,7 +87,7 @@ dev = [
     "ruff>=0.14.0",
 ]
 docs = [
-    "sphinx>=9.0",
+    "sphinx>=7.4.0,<9.1.0",
     "furo",
     "sphinx-copybutton",
 ]
