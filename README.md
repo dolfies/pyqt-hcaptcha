@@ -2,7 +2,7 @@
 
 **PyQtHCaptcha** is a Python library that provides a native hCaptcha widget for desktop applications using PyQt6.
 
-![PyQtHCaptcha Demo](/assets/demo.gif)
+![PyQtHCaptcha Demo](https://github.com/dolfies/pyqt-hcaptcha/raw/master/assets/demo.gif)
 
 ## Features
 
