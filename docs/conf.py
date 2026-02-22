@@ -66,4 +66,5 @@ nitpick_ignore = [
     ("py:class", "PyQt6.QtWebEngineCore.QWebEnginePage"),
     ("py:class", "PyQt6.QtWebEngineWidgets.QWebEngineView"),
     ("py:class", "pyqtBoundSignal"),
+    ("py:class", "PyQt6.QtWidgets.QWidget"),
 ]

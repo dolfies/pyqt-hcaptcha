@@ -95,8 +95,9 @@ class HCaptchaWebView(QWebEngineView):
     """
     A customized QWebEngineView for rendering hCaptcha widgets.
 
-    :param config: An instance of :class:`HCaptchaConfig` containing the widget configuration.
+    :param config: An instance of :class:`~PyQtHCaptcha.HCaptchaConfig` containing the widget configuration.
     :param parent: An optional parent widget.
+    :type parent: PyQt6.QtWidgets.QWidget | None
     """
 
     def __init__(self, config: HCaptchaConfig, parent: QWidget | None = None):
