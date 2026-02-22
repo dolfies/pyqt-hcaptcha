@@ -49,9 +49,9 @@ async def solve_hcaptcha(config: HCaptchaConfig, parent: QWidget | None = None, 
         print("hCaptcha challenge opened")
 
     def on_challenge_expired():
-        if not future.done():
-            future.set_exception(Exception("hCaptcha challenge timed out"))
-        webview.close()
+        print("hCaptcha challenge expired before completion")
+        webview.hide()
+        webview.execute()
 
     def on_close(irreversible: bool):
         if irreversible and not future.done():
