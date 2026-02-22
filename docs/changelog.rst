@@ -3,6 +3,10 @@ Changelog
 
 All notable changes to this project will be documented in this file.
 
+1.2.0 - 2026-02-22
+------------------
+- Changed ``HCaptchaError`` error codes to be snake_case instead of camelCase for better consistency with Python conventions.
+
 1.1.0 - 2026-02-21
 ------------------
 

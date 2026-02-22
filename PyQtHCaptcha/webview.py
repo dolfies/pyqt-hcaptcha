@@ -22,24 +22,24 @@ class HCaptchaError(IntEnum):
     """
     Error codes returned by the hCaptcha widget.
 
-    :cvar htmlLoadError: The HTML failed to load.
-    :cvar networkError: A network error occurred loading the hCaptcha script.
-    :cvar sessionTimeout: The captcha session or token timed out.
-    :cvar failedSetup: The hCaptcha widget failed to render.
-    :cvar challengeClosed: The user dismissed the challenge.
-    :cvar rateLimit: The request was rate limited.
-    :cvar verifyParamsParseError: The provided verify parameters could not be parsed by the widget.
-    :cvar wrongMessageFormat: An unrecognized message was received from the webview.
+    :cvar html_load_error: The HTML failed to load.
+    :cvar network_error: A network error occurred loading the hCaptcha script.
+    :cvar session_timeout: The captcha session or token timed out.
+    :cvar failed_setup: The hCaptcha widget failed to render.
+    :cvar challenge_closed: The user dismissed the challenge.
+    :cvar rate_limit: The request was rate limited.
+    :cvar verify_params_parse_error: The provided verify parameters could not be parsed by the widget.
+    :cvar wrong_message_format: An unrecognized message was received from the webview.
     """
 
-    htmlLoadError = 1
-    networkError = 7
-    sessionTimeout = 15
-    failedSetup = 29
-    challengeClosed = 30
-    rateLimit = 31
-    verifyParamsParseError = 34
-    wrongMessageFormat = -1
+    html_load_error = 1
+    network_error = 7
+    session_timeout = 15
+    failed_setup = 29
+    challenge_closed = 30
+    rate_limit = 31
+    verify_params_parse_error = 34
+    wrong_message_format = -1
 
 
 class HCaptchaPage(QWebEnginePage):
