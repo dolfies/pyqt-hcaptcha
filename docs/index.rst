@@ -57,4 +57,5 @@ See the ``examples/`` directory for more complete examples.
    :caption: API Reference:
 
    api
+   changelog
 

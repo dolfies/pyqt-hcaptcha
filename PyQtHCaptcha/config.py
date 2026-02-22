@@ -42,6 +42,8 @@ class HCaptchaConfig:
     :param orientation: The :class:`HCaptchaOrientation` of the widget.
     :param js_src: The URL of the hCaptcha ``api.js`` script.
     :param rqdata: Custom supplied challenge data (for Enterprise customers).
+    :param phone_prefix: Optional phone country calling code (without '+'), e.g., "44". Used in MFA flows.
+    :param phone_number: Optional full phone number in E.164 format. Used in MFA flows.
     :param sentry: Whether to enable Sentry error reporting.
     :param endpoint: Point hCaptcha JS Ajax requests to an alternative API endpoint.
     :param reportapi: Point hCaptcha bug reporting to an alternative API endpoint.
@@ -65,6 +67,8 @@ class HCaptchaConfig:
         orientation: HCaptchaOrientation = HCaptchaOrientation.landscape,
         js_src: str = "https://hcaptcha.com/1/api.js",
         rqdata: str | None = None,
+        phone_prefix: str | None = None,
+        phone_number: str | None = None,
         sentry: bool = False,
         endpoint: str | None = None,
         reportapi: str | None = None,
@@ -84,6 +88,8 @@ class HCaptchaConfig:
         self.url = self._ensure_domain(url)
         self.js_src = js_src
         self.rqdata = rqdata
+        self.phone_prefix = phone_prefix
+        self.phone_number = phone_number
         self.sentry = sentry
         self.endpoint = endpoint
         self.reportapi = reportapi
@@ -142,3 +148,14 @@ class HCaptchaConfig:
                 parsed_js_src.fragment,
             )
         )
+
+    @property
+    def verify_params(self) -> dict[str, str]:
+        data = {}
+        if self.rqdata:
+            data["rqdata"] = self.rqdata
+        if self.phone_prefix:
+            data["mfa_phoneprefix"] = self.phone_prefix
+        if self.phone_number:
+            data["mfa_phone"] = self.phone_number
+        return data

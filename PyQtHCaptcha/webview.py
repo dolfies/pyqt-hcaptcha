@@ -28,6 +28,7 @@ class HCaptchaError(IntEnum):
     :cvar failedSetup: The hCaptcha widget failed to render.
     :cvar challengeClosed: The user dismissed the challenge.
     :cvar rateLimit: The request was rate limited.
+    :cvar verifyParamsParseError: The provided verify parameters could not be parsed by the widget.
     :cvar wrongMessageFormat: An unrecognized message was received from the webview.
     """
 
@@ -37,6 +38,7 @@ class HCaptchaError(IntEnum):
     failedSetup = 29
     challengeClosed = 30
     rateLimit = 31
+    verifyParamsParseError = 34
     wrongMessageFormat = -1
 
 
@@ -160,7 +162,7 @@ class HCaptchaWebView(QWebEngineView):
 
     def execute(self) -> None:
         """Programmatically trigger the challenge for invisible captchas. Only necessary to trigger again if the challenge was dismissed or expired without a solution."""
-        self._page.runJavaScript("if (window.hcaptcha) { hcaptcha.execute(window._hcaptchaOpts); }")
+        self._page.runJavaScript("if (window.hcaptcha) { hcaptcha.execute(window._verifyParams); }")
 
     def reset(self) -> None:
         """Reset the hCaptcha widget back to its initial state."""
@@ -169,8 +171,8 @@ class HCaptchaWebView(QWebEngineView):
     def _load_captcha(self):
         self.timeout.start(int(self.config.loading_timeout * 1000))
 
-        rqdata_js = json.dumps(self.config.rqdata) if self.config.rqdata else "null"
         theme_js = json.dumps(self.config.custom_theme) if self.config.custom_theme else f"'{self.config.theme}'"
+        verify_params_js = json.dumps(self.config.verify_params)
         page_theme_css = self.config.page_theme or ""
 
         html = f"""
@@ -205,7 +207,8 @@ class HCaptchaWebView(QWebEngineView):
 
                 var onloadCallback = function() {{
                     try {{
-                        var rqdata = {rqdata_js};
+                        window._verifyParams = {verify_params_js};
+
                         var opt = {{
                             sitekey: '{self.config.sitekey}',
                             theme: {theme_js},
@@ -218,11 +221,16 @@ class HCaptchaWebView(QWebEngineView):
                             'chalexpired-callback': expiredCallback('onChallengeExpired'),
                             'open-callback': openCallback
                         }};
-                        window._hcaptchaOpts = rqdata ? {{ rqdata: rqdata }} : {{}};
-                        hcaptcha.render('hcaptcha-container', opt);
-                        hcaptcha.setData(window._hcaptchaOpts);
+                        window.hCaptchaID = hcaptcha.render('hcaptcha-container', opt);
+
+                        try {{
+                            hcaptcha.setData(window._verifyParams);
+                        }} catch (e) {{
+                            post({{ error: 34 }});
+                        }}
+
                         if ('{self.config.size.value}' === 'invisible') {{
-                            hcaptcha.execute(window._hcaptchaOpts);
+                            hcaptcha.execute();
                         }}
                         setTimeout(function() {{ post({{ action: 'didLoad' }}); }}, 0);
                     }} catch (e) {{
