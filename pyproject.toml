@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyqt-hcaptcha"
+description = "Modern hCaptcha SDK for PyQt applications"
+readme = "README.md"
+version = "1.0.0"
+requires-python = ">=3.9"
+dependencies = [
+    "pyqt6",
+    "pyqt6-webengine",
+]
+
+[tool.setuptools.packages.find]
+include = ["app"]
+
+[tool.ruff]
+line-length = 125
+
+[tool.ruff.lint]
+extend-select = [
+  "E",      # pycodestyle: style errors
+  "W",      # pycodestyle: warnings
+  "I",      # isort: import sorting
+  "B",      # flake8-bugbear: common bugs & anti-patterns
+  "UP",     # pyupgrade: modern Python syntax
+  "SIM",    # simplify: redundant code patterns
+  "C4",     # comprehensions: unnecessary comprehensions
+  "RUF",    # Ruff-native rules
+  "ASYNC",  # async-specific issues (e.g. blocking calls)
+]
+ignore = [
+  "B904",   # raise exceptions without "from"
+  "E501",   # handled by formatter
+  "F403",   # star imports
+  "F405",   # undefined names from star imports
+  "RUF021", # BEDMAS is a life skill
+  "RUF022", # why would i ever want sorted __all__
+  "RUF023", # why would i ever want sorted __slots__
+  "SIM105", # i don't like suppress()
+  "SIM108", # unnecessary comprehensions
+]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+include = ["app"]
+exclude = ["**/__pycache__", "build", "dist", "docs"]
+reportUnnecessaryTypeIgnoreComment = "warning"
+reportUnusedImport = "error"
+reportIncompatibleVariableOverride = "information"
+reportIncompatibleMethodOverride = "information"
+pythonVersion = "3.9"
+
+[tool.uv]
+required-environments = ["sys_platform == 'win32'", "sys_platform == 'darwin'", "sys_platform == 'linux'"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.0",
+]
+docs = [
+    "sphinx>=9.0",
+    "furo",
+    "sphinx-copybutton",
+]

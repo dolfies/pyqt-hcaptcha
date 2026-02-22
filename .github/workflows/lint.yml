@@ -1,0 +1,38 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+    types: [ opened, synchronize ]
+
+# Runs do not need to be concurrent
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Sync project dependencies
+        run: uv sync --all-extras
+
+      - name: Run ruff format
+        run: |
+          uv run ruff format --check .
+
+      - name: Run ruff lint
+        run: |
+          uv run ruff check .

@@ -1,0 +1,53 @@
+name: Test docs
+
+on:
+  push:
+  pull_request:
+    types: [ opened, synchronize ]
+
+# Runs do not need to be concurrent
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Sync project dependencies
+        run: uv sync --all-extras
+
+      - name: Restore timestamps
+        uses: chetan/git-restore-mtime-action@v2
+
+      - name: Cache Sphinx build
+        uses: actions/cache@v4
+        with:
+          path: docs/_build
+          key: ${{ runner.os }}-sphinx-${{ hashFiles('docs/**/*.rst', 'docs/conf.py') }}
+          restore-keys: |
+            ${{ runner.os }}-sphinx-
+
+      - name: Build distributions
+        run: |
+          python -m build
+
+      - name: Build docs
+        shell: bash
+        run: |
+          cd docs
+          sphinx-build -b html -D language=en -j auto -n -T -W --keep-going . _build/html
+        env:
+          DOCS_LANGUAGE: en
