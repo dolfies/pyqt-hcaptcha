@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["app"]
+include = ["PyQtHCaptcha"]
 
 [tool.ruff]
 line-length = 125
@@ -49,7 +49,7 @@ quote-style = "double"
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-include = ["app"]
+include = ["PyQtHCaptcha"]
 exclude = ["**/__pycache__", "build", "dist", "docs"]
 reportUnnecessaryTypeIgnoreComment = "warning"
 reportUnusedImport = "error"
