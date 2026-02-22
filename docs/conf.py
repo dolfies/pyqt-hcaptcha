@@ -20,6 +20,8 @@ version = ""
 with open("../PyQtHCaptcha/__init__.py") as f:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)  # type: ignore
 
+release = version
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
@@ -48,7 +50,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
-html_title = "PyQtHCaptcha"
+html_title = f"{project} Documentation"
 
 html_theme_options = {
     "sidebar_hide_name": False,
