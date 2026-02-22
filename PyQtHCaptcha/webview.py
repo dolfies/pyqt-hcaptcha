@@ -57,11 +57,13 @@ class HCaptchaPage(QWebEnginePage):
 
     _MSG_PREFIX = "__hcaptcha__:"
 
-    def javaScriptConsoleMessage(self, level: QWebEnginePage.JavaScriptConsoleMessageLevel, message: str | None, lineNumber: int, sourceID: str | None) -> None:
+    def javaScriptConsoleMessage(
+        self, level: QWebEnginePage.JavaScriptConsoleMessageLevel, message: str | None, lineNumber: int, sourceID: str | None
+    ) -> None:
         if not message or not message.startswith(self._MSG_PREFIX):
             return
         try:
-            data = json.loads(message[len(self._MSG_PREFIX):])
+            data = json.loads(message[len(self._MSG_PREFIX) :])
         except json.JSONDecodeError:
             return
         if "token" in data:
