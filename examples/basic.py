@@ -4,26 +4,41 @@ import sys
 
 from PyQt6.QtWidgets import QApplication
 
-from PyQtHCaptcha import HCaptchaConfig, HCaptchaSize, HCaptchaWebView
+from PyQtHCaptcha import HCaptchaConfig, HCaptchaError, HCaptchaSize, HCaptchaWebView
+
+
+def on_loaded():
+    print("hCaptcha widget loaded successfully")
 
 
 def on_success(token: str):
     print(f"Solution received: {token[:40]}...")
 
     # Proceed with backend requests...
-    view.reload()
+    view.reset()
 
 
-def on_failure(error: str):
-    print(f"hCaptcha Error: {error}")
-
-
-def on_close():
-    print("hCaptcha widget closed by user")
+def on_failure(error: HCaptchaError):
+    print(f"hCaptcha Error: {error.name}")
 
 
 def on_expired():
-    print("hCaptcha challenge expired before completion")
+    print("hCaptcha token expired")
+
+
+def on_open():
+    print("hCaptcha challenge opened")
+
+
+def on_challenge_expired():
+    print("hCaptcha challenge timed out")
+
+
+def on_close(irreversible: bool):
+    if irreversible:
+        print("hCaptcha window was closed")
+    else:
+        print("hCaptcha challenge dismissed by user")
 
 
 if __name__ == "__main__":
@@ -37,10 +52,13 @@ if __name__ == "__main__":
     )
 
     view = HCaptchaWebView(config)
+    view.onLoaded.connect(on_loaded)
     view.onSuccess.connect(on_success)
     view.onFailure.connect(on_failure)
-    view.onClose.connect(on_close)
     view.onExpired.connect(on_expired)
+    view.onOpen.connect(on_open)
+    view.onChallengeExpired.connect(on_challenge_expired)
+    view.onClose.connect(on_close)
 
     view.setWindowTitle("hCaptcha Example")
     view.resize(400, 600)

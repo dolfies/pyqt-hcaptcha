@@ -10,7 +10,7 @@ class HCaptchaSize(Enum):
     """
     Specifies the visual size of the hCaptcha widget.
 
-    :cvar invisible: For passive or background validation.
+    :cvar invisible: For passive or background validation. Auto executed.
     :cvar compact: A smaller, space-saving version of the checkbox.
     :cvar normal: The standard hCaptcha checkbox size.
     """

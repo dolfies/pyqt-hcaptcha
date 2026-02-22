@@ -21,6 +21,11 @@ Configuration
 Types
 -----
 
+.. autoclass:: PyQtHCaptcha.HCaptchaError
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. autoclass:: PyQtHCaptcha.types.HCaptchaCustomTheme
    :members:
    :show-inheritance:

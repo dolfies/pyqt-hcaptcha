@@ -6,7 +6,7 @@ import sys
 import qasync
 from PyQt6.QtWidgets import QApplication, QWidget
 
-from PyQtHCaptcha import HCaptchaConfig, HCaptchaSize, HCaptchaWebView
+from PyQtHCaptcha import HCaptchaConfig, HCaptchaError, HCaptchaSize, HCaptchaWebView
 from PyQtHCaptcha.types import HCaptchaCustomTheme
 
 BRAND_THEME: HCaptchaCustomTheme = {
@@ -23,31 +23,52 @@ async def solve_hcaptcha(config: HCaptchaConfig, parent: QWidget | None = None, 
     webview.setWindowTitle(title)
     webview.resize(400, 600)
 
+    def on_loaded():
+        print("hCaptcha widget loaded successfully")
+
     def on_success(token: str):
+        print("hCaptcha solution received")
         if not future.done():
             future.set_result(token)
-        webview.close()
+        webview.hide()
 
-    def on_failure(error: str):
+    def on_failure(error: HCaptchaError):
+        print(f"hCaptcha error: {error.name}")
         if not future.done():
-            future.set_exception(Exception(f"hCaptcha Error: {error}"))
-        webview.close()
-
-    def on_close():
-        if not future.done():
-            future.set_exception(asyncio.CancelledError("hCaptcha widget closed by user"))
+            future.set_exception(Exception(f"hCaptcha Error: {error.name}"))
+        webview.hide()
 
     def on_expired():
+        print("hCaptcha token expired")
+
+    def on_show():
+        print("hCaptcha challenge required")
+        webview.show()
+
+    def on_open():
+        print("hCaptcha challenge opened")
+
+    def on_challenge_expired():
         if not future.done():
-            future.set_exception(Exception("hCaptcha challenge expired before completion"))
+            future.set_exception(Exception("hCaptcha challenge timed out"))
         webview.close()
 
+    def on_close(irreversible: bool):
+        if irreversible and not future.done():
+            future.set_exception(asyncio.CancelledError("hCaptcha window was closed"))
+            return
+        print("hCaptcha challenge dismissed by user")
+        webview.hide()
+        webview.execute()
+
+    webview.onLoaded.connect(on_loaded)
     webview.onSuccess.connect(on_success)
     webview.onFailure.connect(on_failure)
-    webview.onClose.connect(on_close)
     webview.onExpired.connect(on_expired)
-
-    webview.show()
+    webview.onShow.connect(on_show)
+    webview.onOpen.connect(on_open)
+    webview.onChallengeExpired.connect(on_challenge_expired)
+    webview.onClose.connect(on_close)
 
     return await future
 
@@ -58,7 +79,8 @@ async def main():
             sitekey="10000000-ffff-ffff-ffff-000000000001",
             url="https://accounts.hcaptcha.com/demo",
             custom_theme=BRAND_THEME,
-            size=HCaptchaSize.normal,
+            # Invisible captcha
+            size=HCaptchaSize.invisible,
         )
         token = await solve_hcaptcha(config)
 

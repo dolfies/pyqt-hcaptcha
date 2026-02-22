@@ -27,7 +27,7 @@ Quick Start
 
 .. code-block:: python
 
-   from PyQtHCaptcha import HCaptchaConfig, HCaptchaWebView
+   from PyQtHCaptcha import HCaptchaConfig, HCaptchaError, HCaptchaWebView
 
    config = HCaptchaConfig(
        sitekey="10000000-ffff-ffff-ffff-000000000001",
@@ -36,8 +36,15 @@ Quick Start
    )
 
    view = HCaptchaWebView(config)
+   view.onLoaded.connect(lambda: print("hCaptcha widget loaded successfully"))
    view.onSuccess.connect(lambda token: print(f"Token: {token[:40]}..."))
-   view.onFailure.connect(lambda err: print(f"Error: {err}"))
+   view.onFailure.connect(lambda err: print(f"Error: {err.name}"))
+   view.onExpired.connect(lambda: print("Token expired"))
+
+   # More informational signals
+   view.onOpen.connect(lambda: print("Challenge opened"))
+   view.onChallengeExpired.connect(lambda: print("Challenge expired"))
+   view.onClose.connect(lambda irreversible: print("Window closed" if irreversible else "Challenge closed"))
 
    view.setWindowTitle("hCaptcha")
    view.resize(400, 600)
