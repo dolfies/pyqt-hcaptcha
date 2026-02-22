@@ -38,7 +38,6 @@ class HCaptchaConfig:
 
     :param sitekey: The Site Key sent to the hCaptcha API.
     :param url: The URL to be used to resolve Origin/Referer headers in the webview.
-    :param passive_api_key: Whether the key stays invisible and requires no user interaction.
     :param size: The :class:`HCaptchaSize` of the visible area.
     :param orientation: The :class:`HCaptchaOrientation` of the widget.
     :param js_src: The URL of the hCaptcha ``api.js`` script.
@@ -62,7 +61,6 @@ class HCaptchaConfig:
         *,
         sitekey: str,
         url: str,
-        passive_sitekey: bool = False,
         size: HCaptchaSize = HCaptchaSize.normal,
         orientation: HCaptchaOrientation = HCaptchaOrientation.landscape,
         js_src: str = "https://hcaptcha.com/1/api.js",
@@ -81,7 +79,6 @@ class HCaptchaConfig:
         disable_pat: bool = False,
     ):
         self.sitekey = sitekey
-        self.passive_sitekey = passive_sitekey
         self.size = size
         self.orientation = orientation
         self.url = self._ensure_domain(url)
