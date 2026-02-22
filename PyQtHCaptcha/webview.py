@@ -218,9 +218,9 @@ class HCaptchaWebView(QWebEngineView):
                             'chalexpired-callback': expiredCallback('onChallengeExpired'),
                             'open-callback': openCallback
                         }};
-                        if (rqdata) {{ opt.rqdata = rqdata; }}
-                        window._hcaptchaOpts = rqdata ? {{ rqdata: rqdata }} : undefined;
+                        window._hcaptchaOpts = rqdata ? {{ rqdata: rqdata }} : {{}};
                         hcaptcha.render('hcaptcha-container', opt);
+                        hcaptcha.setData(window._hcaptchaOpts);
                         if ('{self.config.size.value}' === 'invisible') {{
                             hcaptcha.execute(window._hcaptchaOpts);
                         }}
